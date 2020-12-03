@@ -4,7 +4,7 @@ dockerbuild:
 
 .PHONY: build
 build:
-	go build -o bin/codacy-usage-report .
+	./scripts/cross-build.sh
 
 .PHONY: run
 run:
