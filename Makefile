@@ -1,3 +1,7 @@
+.PHONY: dockerbuild
+dockerbuild:
+	docker build -t codacy-usage-report .
+
 .PHONY: build
 build:
 	go build -o bin/codacy-usage-report .
