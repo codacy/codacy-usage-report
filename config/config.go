@@ -13,15 +13,14 @@ type Configuration struct {
 	AccountDB  DatabaseConfiguration
 	AnalysisDB DatabaseConfiguration
 	BatchSize  *uint
-	OutputFile *string
 }
 
-func (c *Configuration) GetOutputFile() string {
-	if c.OutputFile == nil {
-		return "codacy-usage-report.csv"
-	}
+func (c *Configuration) GetOutputFilename() string {
+	return "codacy-usage-report.csv"
+}
 
-	return *c.OutputFile
+func (c *Configuration) GetOutputFolder() string {
+	return "./result"
 }
 
 type DatabaseConfiguration struct {
