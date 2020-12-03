@@ -1,0 +1,46 @@
+version: 2.1
+
+orbs:
+  codacy: codacy/base@2.3.0
+
+jobs:
+  unit_test:
+    docker:
+      - image: circleci/golang:1.13
+    working_directory: ~/workdir
+    steps:
+      - attach_workspace: 
+          at: ~/workdir
+      - run:
+          name: Run go test
+          command: make test
+
+workflows:
+  version: 2
+  compile_test_deploy:
+    jobs:
+      - codacy/checkout_and_version
+      - unit_test:
+          requires:
+            - codacy/checkout_and_version
+      - codacy/shell:
+          name: publish_docker_local
+          cmd: |
+            make dockerbuild
+            docker save --output docker-image.tar $CIRCLE_PROJECT_REPONAME:latest
+          persist_to_workspace: true
+          requires:
+            - unit_test
+          filters:
+            branches:
+              only:
+                - master
+      - codacy/publish_docker:
+          context: CodacyDocker
+          requires:
+            - publish_docker_local
+      - codacy/tag_version:
+          name: tag_version
+          context: CodacyAWS
+          requires:
+            - codacy/publish_docker
