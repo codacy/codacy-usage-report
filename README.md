@@ -1,5 +1,9 @@
 # codacy-usage-report
 
+## Requirements
+
+To run codacy-usage-report it is required to have GoLang or Docker installed.
+
 ## Install
 
 You can install the codacy-usage-report using go get command:
@@ -20,13 +24,13 @@ The configuration file should be placed on the same folder as the executable and
 accountDB:
   host: localhost
   port: 5432
-  database: accountDB
+  database: codacy
   username: username
   password: password
 analysisDB:
   host: localhost
   port: 5432
-  database: analysisDB
+  database: codacy
   username: username
   password: password
 # batchSize: 5 - optional
