@@ -14,7 +14,11 @@ type baseStore struct {
 func (store *baseStore) Connect(dbConfiguration config.DatabaseConfiguration) error {
 	dbConnection, err := connectToDB(dbConfiguration)
 	if err != nil {
-		return fmt.Errorf("Could not connect to analysis database: %s", err.Error())
+		return fmt.Errorf("Could not connect to database: %s", err.Error())
+	}
+
+	if err = dbConnection.Ping(); err != nil {
+		return fmt.Errorf("Could not connect to database: %s", err.Error())
 	}
 
 	store.db = dbConnection

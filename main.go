@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/codacy/codacy-usage-report/config"
 	"github.com/codacy/codacy-usage-report/runner"
 	"github.com/codacy/codacy-usage-report/store"
@@ -13,7 +11,7 @@ const configurationFilename = "codacy-usage-report"
 func main() {
 	configuration, err := config.LoadConfiguration(configurationFilename, "./")
 	if err != nil {
-		log.Fatal(err.Error())
+		panic(err)
 	}
 
 	var accountsStore store.AccountStore
