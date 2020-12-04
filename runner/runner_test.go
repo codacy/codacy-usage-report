@@ -53,10 +53,10 @@ func (mock AnalysisStoreMock) List(from, batchSize uint) ([]models.AnalysisStats
 	lastCommitTime := time.Now()
 	fullList := []models.AnalysisStats{
 		// page 1
-		{UserID: firstAccount.ID, Emails: []string{firstMockAccountEmails[1]}, LastCommit: &lastCommitTime, NumberOfCommits: 10},
+		{UserID: firstAccount.ID, Emails: []string{firstMockAccountEmails[0]}, LastCommit: &lastCommitTime, NumberOfCommits: 10},
 		{UserID: secondAccount.ID, Emails: secondMockAccountEmails, LastCommit: &lastCommitTime, NumberOfCommits: 5},
 		// page 2
-		{UserID: firstAccount.ID, Emails: []string{firstMockAccountEmails[0]}, LastCommit: &lastCommitTime, NumberOfCommits: 5},
+		{UserID: firstAccount.ID, Emails: []string{firstMockAccountEmails[1]}, LastCommit: &lastCommitTime, NumberOfCommits: 5},
 		{UserID: secondAccount.ID, Emails: secondMockAccountEmails, LastCommit: &lastCommitTime, NumberOfCommits: 1},
 	}
 	if from == 0 {

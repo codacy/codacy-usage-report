@@ -2,6 +2,7 @@ package runner
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/codacy/codacy-usage-report/models"
 	"github.com/codacy/codacy-usage-report/store"
@@ -100,10 +101,9 @@ func (runner UsageReportRunner) analysisStatsForAccountsLookup(analysisStats []m
 	for _, currentAnalysisStats := range analysisStats {
 		stats, alreadyExists := analysisStatsByAccountLookup[currentAnalysisStats.UserID]
 		if alreadyExists {
-			stats.LastCommit = currentAnalysisStats.LastCommit
+			stats.LastCommit = runner.mostRecentDate(stats.LastCommit, currentAnalysisStats.LastCommit)
 			stats.NumberOfCommits = stats.NumberOfCommits + currentAnalysisStats.NumberOfCommits
-			added, _ := pie.Strings{}.Append(currentAnalysisStats.Emails...).Diff(stats.Emails)
-			stats.Emails = append(currentAnalysisStats.Emails, added...)
+			stats.Emails = runner.mergeEmails(stats.Emails, currentAnalysisStats.Emails)
 			analysisStatsByAccountLookup[currentAnalysisStats.UserID] = stats
 		} else {
 			analysisStatsByAccountLookup[currentAnalysisStats.UserID] = currentAnalysisStats
@@ -111,6 +111,27 @@ func (runner UsageReportRunner) analysisStatsForAccountsLookup(analysisStats []m
 	}
 
 	return analysisStatsByAccountLookup
+}
+
+func (runner UsageReportRunner) mergeEmails(currentEmails []string, newEmails []string) []string {
+	added, _ := pie.Strings{}.Append(currentEmails...).Diff(newEmails)
+	return append(currentEmails, added...)
+}
+
+// mostRecentDate compares first and second date and returns the most recent one
+func (runner UsageReportRunner) mostRecentDate(firstDate *time.Time, secondDate *time.Time) *time.Time {
+	if firstDate == nil {
+		return secondDate
+	}
+
+	if secondDate == nil {
+		return firstDate
+	}
+
+	if firstDate.After(*secondDate) {
+		return firstDate
+	}
+	return secondDate
 }
 
 // accountsUsagesForAccounts merges all accounts with their analysis stats to create the list of account usages
