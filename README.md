@@ -62,7 +62,7 @@ Alternatively, you can run codacy-usage-report using Docker:
 
 ```bash
 docker run -v $PWD/codacy-usage-report.yml:/app/codacy-usage-report.yml \
-           -v $PWD/result:/app/result \
+           -v $PWD/codacy-usage-report:/app/codacy-usage-report \
            codacy/codacy-usage-report:latest
 ```
 
