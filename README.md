@@ -1,5 +1,11 @@
 # codacy-usage-report
 
+codacy-usage-report is a script that generates a CSV file with the following information about the activity of your Codacy Self-hosted instance users:
+
+-   Last time a user logged in
+-   Date of the last commit
+-   Number of commits
+
 ## Requirements
 
 To run codacy-usage-report you must have either [Go](https://golang.org/dl/) or [Docker](https://www.docker.com/) installed.
