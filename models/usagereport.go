@@ -70,11 +70,13 @@ func (report UsageReport) ToCSV() [][]string {
 }
 
 func (report UsageReport) WriteAsCSV(pathToFile, filename string) error {
+	csvFilePath := path.Join(pathToFile, filename)
+	fmt.Println("Writing usage report to", csvFilePath)
 	if err := os.MkdirAll(pathToFile, 0700); err != nil {
 		return err
 	}
 
-	file, err := os.Create(path.Join(pathToFile, filename))
+	file, err := os.Create(csvFilePath)
 	if err != nil {
 		return err
 	}

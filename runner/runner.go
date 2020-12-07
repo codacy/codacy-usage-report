@@ -26,30 +26,26 @@ func NewUsageReporterRunner(
 	}
 }
 
-func (runner UsageReportRunner) panicOnError(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-func (runner UsageReportRunner) Run(resultPath, usageReportFilename string) {
+func (runner UsageReportRunner) Run() (*models.UsageReport, error) {
 	fmt.Println("Started fetching usage report")
 
 	accountsList, err := runner.getAccounts()
-	runner.panicOnError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	accountsUsage, err := runner.getAccountsUsage(accountsList)
-	runner.panicOnError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	fmt.Println("Fetching deleted accounts")
 	deletedAccounts, err := runner.accountsStore.ListDeletedAccounts()
-	runner.panicOnError(err)
+	if err != nil {
+		return nil, err
+	}
 
-	usageReport := models.UsageReport{AccountsUsages: accountsUsage, DeletedAccounts: deletedAccounts}
-
-	fmt.Println("Writing usage report to", resultPath+"/"+usageReportFilename)
-	err = usageReport.WriteAsCSV(resultPath, usageReportFilename)
-	runner.panicOnError(err)
+	return &models.UsageReport{AccountsUsages: accountsUsage, DeletedAccounts: deletedAccounts}, nil
 }
 
 func (runner UsageReportRunner) getAccounts() ([]models.Account, error) {
