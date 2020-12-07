@@ -24,19 +24,11 @@ workflows:
           requires:
             - codacy/checkout_and_version
       - codacy/shell:
-          name: build_binaries
-          cmd: make build
-          persist_to_workspace: true
-          requires:
-            - unit_test
-      - codacy/shell:
           name: publish_docker_local
           cmd: |
             make dockerbuild
             docker save --output docker-image.tar $CIRCLE_PROJECT_REPONAME:latest
           persist_to_workspace: true
-          requires:
-            - build_binaries
           filters:
             branches:
               only:
@@ -44,12 +36,6 @@ workflows:
       - codacy/publish_docker:
           context: CodacyDocker
           requires:
-            - publish_docker_local
-      - codacy/publish_ghr:
-          context: CodacyGitHub
-          path: ~/workdir/bin/
-          requires:
-            - build_binaries
             - publish_docker_local
       - codacy/tag_version:
           name: tag_version
