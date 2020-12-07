@@ -1,18 +1,29 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/codacy/codacy-usage-report/config"
 	"github.com/codacy/codacy-usage-report/runner"
 	"github.com/codacy/codacy-usage-report/store"
 )
 
-const configurationFilename = "codacy-usage-report"
+const (
+	defaultConfigurationFileLocation = "./codacy-usage-report.yml"
+	defaultOutputFolder              = "./codacy-usage-report"
+	defaultOutputFilename            = "codacy-usage-report"
+)
 
 func main() {
-	configuration, err := config.LoadConfiguration(configurationFilename, "./")
+	configurationFileLocation := flag.String("configFile", defaultConfigurationFileLocation, "Configuration file location")
+	outputFolderPath := flag.String("outputFolder", defaultOutputFolder, "Output CSV file location")
+	flag.Parse()
+
+	configuration, err := config.LoadConfiguration(*configurationFileLocation)
 	if err != nil {
 		failWithError(err)
 	}
@@ -35,10 +46,13 @@ func main() {
 		failWithError(err)
 	}
 
-	if err = usageReport.WriteAsCSV(configuration.GetOutputFolder(), configuration.GetOutputFilename()); err != nil {
+	if err = usageReport.WriteAsCSV(*outputFolderPath, resultFilenameWithTimestamp(defaultOutputFilename)); err != nil {
 		failWithError(err)
 	}
+}
 
+func resultFilenameWithTimestamp(baseFilename string) string {
+	return fmt.Sprintf("%s-%d.csv", baseFilename, time.Now().Unix())
 }
 
 func failWithError(err error) {
