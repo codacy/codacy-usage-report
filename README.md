@@ -14,7 +14,7 @@ To run codacy-usage-report you must have either [Go](https://golang.org/dl/) or 
 
 ## Configuration
 
-Create a configuration file `codacy-usage-report.yml` with the example syntax below. You must have this configuration file in your current working directory when running codacy-usage-report.
+Create a configuration file `codacy-usage-report.yml` with the example syntax below.
 
 ```yaml
 accountDB:
@@ -31,6 +31,8 @@ analysisDB:
   password: password
 # batchSize: 5 (optional)
 ```
+
+You must have this configuration file in your current working directory or specify it with the flag `--configFile` when running codacy-usage-report.
 
 ## Usage
 
@@ -50,7 +52,7 @@ To run codacy-usage-report directly using Go:
     codacy-usage-report
     ```
 
-    **Note:** Make sure that you have [included the Go bin folder in your PATH environment variable](https://golang.org/doc/install#install).
+    **Note:** Make sure that you have [included the Go bin folder in your `PATH` environment variable](https://golang.org/doc/install#install).
 
 ### Running codacy-usage-report using Docker
 
@@ -61,6 +63,26 @@ docker run -v $PWD/codacy-usage-report.yml:/app/codacy-usage-report.yml \
            -v $PWD/result:/app/result \
            codacy/codacy-usage-report:latest
 ```
+
+### Command-line options
+
+```bash
+codacy-usage-report [--configFile <configuration file path>]
+                    [--outputFolder <output folder path>]
+                    [--help]
+```
+
+-   `--configFile`
+
+    Path of the `codacy-usage-report.yml` configuration file. The default is `./codacy-usage-report.yml`.
+
+-   `--outputFolder`
+
+    Path of the output folder to store the CSV file. The default is `./codacy-usage-report/`.
+
+-   `--help`
+
+    Print usage information.
 
 ## What is Codacy?
 
