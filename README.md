@@ -2,25 +2,11 @@
 
 ## Requirements
 
-To run codacy-usage-report it is required to have GoLang installed.
+To run codacy-usage-report you must have either [Go](https://golang.org/dl/) or [Docker](https://www.docker.com/) installed.
 
-## Install
+## Configuration
 
-You can install the codacy-usage-report using go get command:
-
-    go get -u github.com/codacy/codacy-usage-report
-
-## Usage
-
-To run the codacy usage report, simply run the following command:
-
-    codacy-usage-report
-
-_Note: Make sure you have Go bin folder in your PATH_
-
-## Configuration file
-
-The configuration file should be placed on the same folder as the executable and should be named `codacy-usage-report.yml`. Example: 
+Create a configuration file `codacy-usage-report.yml` with the following syntax:
 
 ```yaml
 accountDB:
@@ -35,20 +21,46 @@ analysisDB:
   database: codacy
   username: username
   password: password
-# batchSize: 5 - optional
+# batchSize: 5 (optional)
 ```
 
-## Run from docker
+You must move the configuration file to the same folder as the codacy-usage-report executable, or keep it in the current working directory when running codacy-usage-report.
 
-You can also run the codacy usage report using docker:
+## Usage
 
-    docker run -v $PWD/codacy-usage-report.yml:/app/codacy-usage-report.yml -v $PWD/result:/app/result codacy/codacy-usage-report:latest
+### Running codacy-usage-report using Go
+
+To run codacy-usage-report directly using Go:
+
+1.  Install codacy-usage-report using Go:
+
+    ```bash
+    go get -u github.com/codacy/codacy-usage-report
+    ```
+
+2.  Run codacy-usage-report:
+
+    ```bash
+    codacy-usage-report
+    ```
+
+    **Note:** Make sure that you have [included the Go bin folder in your PATH environment variable](https://golang.org/doc/install#install).
+
+### Running codacy-usage-report using Docker
+
+Alternatively, you can run codacy-usage-report using Docker:
+
+```bash
+docker run -v $PWD/codacy-usage-report.yml:/app/codacy-usage-report.yml \
+           -v $PWD/result:/app/result \
+           codacy/codacy-usage-report:latest
+```
 
 ## What is Codacy?
 
 [Codacy](https://www.codacy.com/) is an Automated Code Review Tool that monitors your technical debt, helps you improve your code quality, teaches best practices to your developers, and helps you save time in Code Reviews.
 
-### Among Codacy’s features:
+### Among Codacy's features:
 
 -   Identify new Static Analysis issues
 -   Commit and Pull Request Analysis with GitHub, BitBucket/Stash, GitLab (and also direct git repositories)
