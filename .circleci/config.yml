@@ -29,6 +29,8 @@ workflows:
             docker build -t $CIRCLE_PROJECT_REPONAME .
             docker save --output docker-image.tar $CIRCLE_PROJECT_REPONAME:latest
           persist_to_workspace: true
+          requires:
+            - unit_test
           filters:
             branches:
               only:
