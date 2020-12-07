@@ -16,6 +16,8 @@ To run the codacy usage report, simply run the following command:
 
     codacy-usage-report
 
+_Note: Make sure you have Go bin folder in your PATH_
+
 ## Configuration file
 
 The configuration file should be placed on the same folder as the executable and should be named `codacy-usage-report.yml`. Example: 
