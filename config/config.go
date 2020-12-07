@@ -15,14 +15,6 @@ type Configuration struct {
 	BatchSize  *uint
 }
 
-func (c *Configuration) GetOutputFilename() string {
-	return "codacy-usage-report.csv"
-}
-
-func (c *Configuration) GetOutputFolder() string {
-	return "./result"
-}
-
 type DatabaseConfiguration struct {
 	Host     string
 	Port     int
@@ -31,9 +23,9 @@ type DatabaseConfiguration struct {
 	Password string
 }
 
-func LoadConfiguration(configName string, configLocation string) (*Configuration, error) {
-	viper.SetConfigName(configName)
-	viper.AddConfigPath(configLocation)
+func LoadConfiguration(configFile string) (*Configuration, error) {
+	fmt.Println("Loading configuration file", configFile)
+	viper.SetConfigFile(configFile)
 
 	if err := viper.ReadInConfig(); err != nil {
 		errorMessage := fmt.Sprintf("Error reading configuration: %s", err.Error())
