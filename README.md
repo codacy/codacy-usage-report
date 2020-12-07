@@ -6,7 +6,7 @@ To run codacy-usage-report you must have either [Go](https://golang.org/dl/) or 
 
 ## Configuration
 
-Create a configuration file `codacy-usage-report.yml` with the following syntax:
+Create a configuration file `codacy-usage-report.yml` with the example syntax below. You must have this configuration file in your current working directory when running codacy-usage-report.
 
 ```yaml
 accountDB:
@@ -23,8 +23,6 @@ analysisDB:
   password: password
 # batchSize: 5 (optional)
 ```
-
-You must move the configuration file to the same folder as the codacy-usage-report executable, or keep it in the current working directory when running codacy-usage-report.
 
 ## Usage
 
