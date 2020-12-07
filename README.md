@@ -29,7 +29,9 @@ analysisDB:
   database: codacy
   username: username
   password: password
-# batchSize: 5 (optional)
+# You may need to lower the batch size from the default value
+# if you experience timeouts when running the script:
+# batchSize: 10000000
 ```
 
 You must have this configuration file in your current working directory or specify it with the flag `--configFile` when running codacy-usage-report.
