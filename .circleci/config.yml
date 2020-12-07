@@ -26,7 +26,7 @@ workflows:
       - codacy/shell:
           name: publish_docker_local
           cmd: |
-            make dockerbuild
+            docker build -t $CIRCLE_PROJECT_REPONAME .
             docker save --output docker-image.tar $CIRCLE_PROJECT_REPONAME:latest
           persist_to_workspace: true
           filters:
