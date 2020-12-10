@@ -10,7 +10,10 @@ The script obtains the information directly from your Codacy database and can on
 
 ## Requirements
 
-To run codacy-usage-report you must have either [Go](https://golang.org/dl/) or [Docker](https://www.docker.com/) installed.
+To run codacy-usage-report you must have:
+
+-   Read access to the `account` and `analysis` Codacy databases from the environment where you will run codacy-usage-report
+-   Either [Go](https://golang.org/dl/) or [Docker](https://www.docker.com/) installed
 
 ## Configuration
 
