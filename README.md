@@ -1,12 +1,15 @@
 # codacy-usage-report
 
-codacy-usage-report is a script that generates a CSV file with the following information about the activity of your Codacy users:
+codacy-usage-report is a script that generates a CSV file with the following activity information for each Codacy user:
 
--   Last time a user logged in
+-   Date of creation
+-   Date of the last login
 -   Date of the last commit
 -   Number of commits
+-   Email addresses used on the commits
+-   Date of removal, if applicable
 
-The script obtains the information directly from your Codacy database and can only be used on Codacy Self-hosted instances.
+The script obtains the information directly from your Codacy databases and can only be used on Codacy Self-hosted instances.
 
 ## Requirements
 
