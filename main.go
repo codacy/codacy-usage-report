@@ -14,7 +14,7 @@ import (
 
 const (
 	defaultConfigurationFileLocation = "./codacy-usage-report.yml"
-	defaultOutputFolder              = "./codacy-usage-report"
+	defaultOutputFolder              = "./result"
 	defaultOutputFilename            = "codacy-usage-report"
 )
 

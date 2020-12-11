@@ -68,7 +68,7 @@ Alternatively, you can run codacy-usage-report using Docker:
 
 ```bash
 docker run -v $PWD/codacy-usage-report.yml:/app/codacy-usage-report.yml \
-           -v $PWD/codacy-usage-report:/app/codacy-usage-report \
+           -v $PWD/codacy-usage-report:/app/result \
            codacy/codacy-usage-report:latest
 ```
 
@@ -86,7 +86,7 @@ codacy-usage-report [--configFile <configuration file path>]
 
 -   `--outputFolder`
 
-    Path of the output folder to store the CSV file. The default is `./codacy-usage-report/`.
+    Path of the output folder to store the CSV file. The default is `./result/`.
 
 -   `--help`
 
