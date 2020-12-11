@@ -15,6 +15,7 @@ The script obtains the information directly from your Codacy databases and can o
 
 To run codacy-usage-report you must have:
 
+-   [Codacy Self-hosted 3.1.0](https://docs.codacy.com/release-notes/self-hosted/self-hosted-v3.1.0/) or later
 -   Read access to the `account` and `analysis` Codacy databases from the environment where you will run codacy-usage-report
 -   Either [Go](https://golang.org/dl/) or [Docker](https://www.docker.com/) installed
 
