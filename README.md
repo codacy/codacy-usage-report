@@ -30,12 +30,14 @@ accountDB:
   database: codacy
   username: username
   password: password
+  sslMode: require
 analysisDB:
   host: localhost
   port: 5432
   database: codacy
   username: username
   password: password
+  sslMode: require
 # You may need to lower the batch size from the default value
 # if you experience timeouts when running the script:
 # batchSize: 10000000
