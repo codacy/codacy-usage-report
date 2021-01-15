@@ -49,7 +49,7 @@ func (mock AnalysisStoreMock) LastCommitID() (uint, error) {
 	return 5, nil
 }
 
-func (mock AnalysisStoreMock) List(from, batchSize uint) ([]models.AnalysisStats, error) {
+func (mock AnalysisStoreMock) ListForUsers(from, batchSize uint) ([]models.AnalysisStats, error) {
 	lastCommitTime := time.Now()
 	fullList := []models.AnalysisStats{
 		// page 1
@@ -66,6 +66,10 @@ func (mock AnalysisStoreMock) List(from, batchSize uint) ([]models.AnalysisStats
 	} else {
 		return []models.AnalysisStats{}, nil
 	}
+}
+
+func (mock AnalysisStoreMock) ListForNonUsers(accountIds []uint, from, batchSize uint) ([]models.AnalysisStatsForNonUser, error) {
+	return []models.AnalysisStatsForNonUser{}, nil
 }
 
 var accountStoreMock = AccountStoreMock{}
