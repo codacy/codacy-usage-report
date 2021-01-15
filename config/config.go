@@ -21,6 +21,7 @@ type DatabaseConfiguration struct {
 	Database string
 	Username string
 	Password string
+	SslMode  string
 }
 
 func LoadConfiguration(configFile string) (*Configuration, error) {
