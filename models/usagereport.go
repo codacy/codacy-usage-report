@@ -9,8 +9,9 @@ import (
 )
 
 type UsageReport struct {
-	AccountsUsages  []AccountUsage
-	DeletedAccounts []DeletedAccount
+	AccountsUsages    []AccountUsage
+	NonAccountsUsages []AnalysisStatsForNonUser
+	DeletedAccounts   []DeletedAccount
 }
 
 func (report UsageReport) accountUsageToCSV(usage AccountUsage) []string {
@@ -32,6 +33,25 @@ func (report UsageReport) accountUsageToCSV(usage AccountUsage) []string {
 		lastCommitString,
 		fmt.Sprint(usage.AnalysisStats.NumberOfCommits),
 		"",
+		"true",
+	}
+}
+
+func (report UsageReport) nonAccountUsageToCSV(usage AnalysisStatsForNonUser) []string {
+	lastCommitString := ""
+	if usage.LastCommit != nil {
+		lastCommitString = usage.LastCommit.String()
+	}
+
+	return []string{
+		"",
+		usage.Email,
+		"",
+		"",
+		lastCommitString,
+		fmt.Sprint(usage.NumberOfCommits),
+		"",
+		"false",
 	}
 }
 
@@ -44,11 +64,12 @@ func (report UsageReport) deletedAccountToCSV(deletedAccount DeletedAccount) []s
 		"",
 		"",
 		deletedAccount.DeletedAt.String(),
+		"",
 	}
 }
 
 func (report UsageReport) CSVHeader() []string {
-	return []string{"username", "emails", "created_at", "last_login", "last_commit", "number_of_commits", "deleted_at"}
+	return []string{"username", "emails", "created_at", "last_login", "last_commit", "number_of_commits", "deleted_at", "codacy_user"}
 }
 
 func (report UsageReport) ToCSV() [][]string {
@@ -59,6 +80,11 @@ func (report UsageReport) ToCSV() [][]string {
 	for _, accountUsage := range report.AccountsUsages {
 		accountUsageCsv := report.accountUsageToCSV(accountUsage)
 		csvContent = append(csvContent, accountUsageCsv)
+	}
+
+	for _, nonAccountUsage := range report.NonAccountsUsages {
+		nonAccountUsageCsv := report.nonAccountUsageToCSV(nonAccountUsage)
+		csvContent = append(csvContent, nonAccountUsageCsv)
 	}
 
 	for _, deletedAccount := range report.DeletedAccounts {

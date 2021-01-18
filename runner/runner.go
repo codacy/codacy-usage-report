@@ -39,18 +39,59 @@ func (runner UsageReportRunner) Run() (*models.UsageReport, error) {
 		return nil, err
 	}
 
+	nonAccountsUsage, err := runner.getNonAccountsUsage(accountsList)
+	if err != nil {
+		return nil, err
+	}
+
 	fmt.Println("Fetching deleted accounts")
 	deletedAccounts, err := runner.accountsStore.ListDeletedAccounts()
 	if err != nil {
 		return nil, err
 	}
 
-	return &models.UsageReport{AccountsUsages: accountsUsage, DeletedAccounts: deletedAccounts}, nil
+	return &models.UsageReport{AccountsUsages: accountsUsage, NonAccountsUsages: nonAccountsUsage, DeletedAccounts: deletedAccounts}, nil
 }
 
 func (runner UsageReportRunner) getAccounts() ([]models.Account, error) {
 	fmt.Println("Fetching user accounts")
 	return runner.accountsStore.ListAccounts()
+}
+
+func (runner UsageReportRunner) getNonAccountsUsage(accountsList []models.Account) ([]models.AnalysisStatsForNonUser, error) {
+	fmt.Println("Fetching usage for non accounts")
+	accountIds := []uint{}
+
+	for _, account := range accountsList {
+		accountIds = append(accountIds, account.ID)
+	}
+
+	return runner.analysisStatsForNonAccountsInBatches(accountIds)
+}
+
+func (runner UsageReportRunner) analysisStatsForNonAccountsInBatches(accountIds []uint) ([]models.AnalysisStatsForNonUser, error) {
+	var nonAccountsAnalysisStatsList []models.AnalysisStatsForNonUser
+	var fromCommitID uint = 0
+
+	lastCommitID, err := runner.analysisStore.LastCommitID()
+	if err != nil {
+		return nil, err
+	}
+
+	totalBatches := lastCommitID / runner.batchSize
+	for batchNumber := 0; fromCommitID <= lastCommitID; batchNumber++ {
+		fmt.Printf("Analysis stats for non accounts: Batch #%d of %d \n", batchNumber, totalBatches)
+		analysisStats, err := runner.analysisStore.ListForNonUsers(accountIds, fromCommitID, runner.batchSize)
+		if err != nil {
+			return nil, err
+		}
+
+		nonAccountsAnalysisStatsList = append(nonAccountsAnalysisStatsList, analysisStats...)
+
+		fromCommitID = fromCommitID + runner.batchSize
+	}
+
+	return nonAccountsAnalysisStatsList, nil
 }
 
 // getAccountsUsage Fetches the usage for every user account
@@ -78,7 +119,7 @@ func (runner UsageReportRunner) analysisStatsByAccountInBatches() (map[uint]mode
 	totalBatches := lastCommitID / runner.batchSize
 	for batchNumber := 0; fromCommitID <= lastCommitID; batchNumber++ {
 		fmt.Printf("Analysis stats for account: Batch #%d of %d \n", batchNumber, totalBatches)
-		analysisStats, err := runner.analysisStore.List(fromCommitID, runner.batchSize)
+		analysisStats, err := runner.analysisStore.ListForUsers(fromCommitID, runner.batchSize)
 		if err != nil {
 			return nil, err
 		}

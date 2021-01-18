@@ -8,11 +8,13 @@ import (
 
 	"github.com/codacy/codacy-usage-report/config"
 	"github.com/codacy/codacy-usage-report/models"
+	"github.com/codacy/codacy-usage-report/utils"
 )
 
 type AnalysisStore interface {
 	LastCommitID() (uint, error)
-	List(from, batchSize uint) ([]models.AnalysisStats, error)
+	ListForUsers(from, batchSize uint) ([]models.AnalysisStats, error)
+	ListForNonUsers(accountIds []uint, from, batchSize uint) ([]models.AnalysisStatsForNonUser, error)
 	Close() error
 }
 
@@ -43,7 +45,7 @@ func (store *AnalysisStoreImpl) LastCommitID() (uint, error) {
 	}
 }
 
-func (store *AnalysisStoreImpl) List(from, batchSize uint) ([]models.AnalysisStats, error) {
+func (store *AnalysisStoreImpl) ListForUsers(from, batchSize uint) ([]models.AnalysisStats, error) {
 	maxID := from + batchSize
 	filterValues := []interface{}{from, maxID}
 
@@ -68,6 +70,38 @@ WHERE c."authorEmail" = a.email and c.id >= $1 and c.id < $2 GROUP BY a."possibl
 		}
 
 		stat.Emails = strings.Split(emailsAsString, ",")
+
+		statsList = append(statsList, stat)
+	}
+
+	return statsList, nil
+}
+
+func (store *AnalysisStoreImpl) ListForNonUsers(accountIds []uint, from, batchSize uint) ([]models.AnalysisStatsForNonUser, error) {
+	maxID := from + batchSize
+	filterValues := []interface{}{from, maxID}
+
+	// All the entries on this result are related to accounts that exist
+	commitAuthorsTableQuery := `SELECT DISTINCT email FROM "Commit_Author" where "possibleUserId" is not null and "possibleUserId" in (` + utils.JoinUintArray(accountIds, ",") + `)`
+
+	analysisStatQuery := `SELECT c."authorEmail", count(*) number_commits, max(c."commitTimestamp") last_commit
+	FROM "Commit" c
+	WHERE c."authorEmail" not in (` + commitAuthorsTableQuery + `) and c.id >= $1 and c.id < $2 GROUP BY c."authorEmail"`
+
+	rows, err := store.db.Query(analysisStatQuery, filterValues...)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to run the query to fetch analysis stats for non users: %s", err.Error())
+	}
+	defer rows.Close()
+
+	var statsList []models.AnalysisStatsForNonUser
+	for rows.Next() {
+		var stat models.AnalysisStatsForNonUser
+
+		err = rows.Scan(&stat.Email, &stat.NumberOfCommits, &stat.LastCommit)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to parse list analysis query result for non users: %s", err.Error())
+		}
 
 		statsList = append(statsList, stat)
 	}
