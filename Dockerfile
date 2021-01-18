@@ -11,6 +11,7 @@ COPY config ./config
 COPY models ./models
 COPY runner ./runner
 COPY store ./store
+COPY utils ./utils
 COPY main.go ./main.go
 
 RUN go build -o bin/codacy-usage-report main.go
