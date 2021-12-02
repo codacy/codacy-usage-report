@@ -9,7 +9,7 @@ import (
 )
 
 func dbConnectionString(dbConfig config.DatabaseConfiguration) string {
-	return fmt.Sprintf("user=%s password=%s DB.name=%s port=%d host=%s sslmode=%s", dbConfig.Username, dbConfig.Password, dbConfig.Database, dbConfig.Port, dbConfig.Host, dbConfig.SslMode)
+	return fmt.Sprintf("user=%s password=%s dbname=%s port=%d host=%s sslmode=%s", dbConfig.Username, dbConfig.Password, dbConfig.Database, dbConfig.Port, dbConfig.Host, dbConfig.SslMode)
 }
 
 func connectToDB(dbConfig config.DatabaseConfiguration) (*sql.DB, error) {
